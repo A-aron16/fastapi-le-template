@@ -1,19 +1,15 @@
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+from sqlmodel import Field, SQLModel
+from typing import Optional
+from pydantic import EmailStr
+from pwdlib import PasswordHash
 
-db = SQLAlchemy()
+class UserBase(SQLModel,):
+    username: str = Field(index=True, unique=True)
+    email: EmailStr = Field(index=True, unique=True)
+    password: str
 
-class User(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String(80), unique=True, nullable=False)
-  password = db.Column(db.String(120), nullable=False)
+class User(UserBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
 
-  def __init__(self, username, password):
-    self.username= username
-    self.set_password(password)
-
-  def set_password(self, password):
-    self.password = generate_password_hash(password)
-
-  def check_password(self, password):
-    return check_password_hash(self.password, password)
+    def check_password(self, plaintext_password:str):
+        return PasswordHash.recommended().verify(password=plaintext_password, hash=self.password)

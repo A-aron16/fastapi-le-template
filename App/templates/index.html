@@ -63,7 +63,7 @@
     </nav>
 
     <div class="row" style="margin-top: 10px; position: absolute; height:20px; top:10; z-index:10; height:30px; width: 100vw;">
-      {% with messages = get_flashed_messages() %}
+      {% with messages = get_flashed_messages(request) %}
         {% if messages %}
           {% for message in messages %}
             <div class="blue lighten-5 col s10 offset-s1">

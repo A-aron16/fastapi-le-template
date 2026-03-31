@@ -40,7 +40,7 @@
       </div>
     </nav>
 
-    {% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages(request) %}
     {% if messages %}
     <nav class="white black-text" style="padding: 10px">
       <div class="nav-wrapper">
